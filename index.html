@@ -6,6 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript & CSS 陀螺儀使圖片三維翻轉</title>
     <script>
+        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        // handle data
+                    } else {
+                        // handle denied
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                });
+        } else {
+            // han
+            console.log(typeof DeviceOrientationEvent)
+        }
         document.addEventListener("DOMContentLoaded", function () {
             var xyz_img = document.getElementById('xyz-img');
             if (window.DeviceOrientationEvent) {

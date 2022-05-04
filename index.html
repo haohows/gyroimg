@@ -18,6 +18,10 @@
             justify-content: center;
 
         }
+
+        .bgImg {
+            min-height: 100%;
+        }
     </style>
 </head>
 
@@ -27,7 +31,8 @@
         <span class="translateZ">trarslateZ</span>
     </div>
     <div class="wrap">
-        <img src="https://p1-tt.byteimg.com/origin/pgc-image/aeee99cf50d94cbc977c0597b541ba53.jpg" class="bgImg">
+        <img src="https://firebasestorage.googleapis.com/v0/b/puzzlesys-c76b1.appspot.com/o/image%2FXVlds0iFdRQ3sflgTWaEVtkMnSs1%2Fa5bbf081-abb3-4c16-90de-5504582fea1b?alt=media&token=13df2cc5-bd5b-4d02-8d2e-1e30b96ffda3"
+            class="bgImg">
     </div>
 </body>
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -35,20 +40,12 @@
     if (window.DeviceOrientationEvent) {
         window.addEventListener('deviceorientation', function (event) {
 
-            var
-                g = document.getElementById('gamma'),
-
-                gamma = event.gamma;
+            let g = document.getElementById('gamma')
+            let gamma = event.gamma;
 
 
             g.innerHTML = Math.round(gamma);
-            var translateZ = parseInt(Math.round(gamma) * 0.5);
-            if (translateZ >= 40) {
-                translateZ = 40
-            }
-            if (translateZ >= -40) {
-                translateZ = -40
-            }
+            var translateZ = parseInt(Math.round(gamma) * 0.3);
             $(".translateZ").html(translateZ);
             let wrap = document.querySelector('.wrap')
             wrap.style.transform = 'translateX(' + translateZ + 'px)'

@@ -8,196 +8,53 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        .p6-wrap {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: 0;
+        body {
             overflow: hidden;
+            margin: 0;
         }
 
-        .p6fullView-wrap {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform: translate3d(0px, 0px, 0px);
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-        }
+        .wrap {
+            display: flex;
+            justify-content: center;
 
-        .p6fullView-close-btn {
-            position: absolute;
-            z-index: 2;
-            right: 0;
-            top: 0;
-        }
-
-        .p6fullView-wrap-text {
-            position: absolute;
-            z-index: 2;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .full-bgimg {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            /*width: 81.2rem;*/
-            /*height: 37.5rem;*/
-            /*width: 6867px;*/
-            width: 343.5rem;
-            height: 100%;
         }
     </style>
 </head>
 
 <body>
-    alpha:<span id="alpha"></span><br />
-    beta:<span id="beta"></span><br />
-    gamma:<span id="gamma"></span><br />
-    <p class="translateZ">trarslateZ</p>
-    <div class="p6-wrap">
-        <span class="p6fullView-close-btn">X</span>
-        <div class="p6fullView-wrap-text">
-            《
-            <span class="full_bgimgW">观看全景</span>
-            》
-        </div>
-        <div class="p6fullView-wrap">
-            <img class="full-bgimg" src="./bg.jpg" alt="">
-        </div>
+    <div style="height:50px">
+        <span>gamma:<span id="gamma"></span><br /></span>
+        <span class="translateZ">trarslateZ</span>
+    </div>
+    <div class="wrap">
+        <img src="https://p1-tt.byteimg.com/origin/pgc-image/aeee99cf50d94cbc977c0597b541ba53.jpg" class="bgImg">
     </div>
 </body>
 <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script>
-    // 全景图-陀螺仪
-    var flag = true;
-    var firstAngle = 0;
-    var instance = 0;
-    var tuoluo = false;//阻止事件监听
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function (event) {
 
-    function deviceorientation(wrap_translateX) {
+            var
+                g = document.getElementById('gamma'),
 
-        // 全景图-陀螺仪
-        var flag = true;
-        var firstAngle = 0;
-        var instance = 0;
-        if (window.DeviceOrientationEvent) {
-            window.addEventListener('deviceorientation', function (event) {
+                gamma = event.gamma;
 
-                if (tuoluo) {
-                    var alpha = event.alpha,
-                        beta = event.beta,
-                        gamma = event.gamma;
-                    if (flag) {
-                        firstAngle = alpha; //记录第一次值
-                        flag = false;
-                    }
-                    var full_bgimgW = ($(".full-bgimg").width() - $(window).width()) / (2 * 90); //每一度移动距离
-                    var translateZ = parseInt(Math.round(instance) * full_bgimgW) + wrap_translateX;
-                    var changeDeg90 = wrap_translateX / full_bgimgW; //初始，距离中心偏移度数
 
-                    /*1.根据初始值firstAngle，角度位置判断*/
-                    if (firstAngle > 90 && firstAngle < 270) {
-                        /*2.根据偏移角度大于90度，判断*/
-                        if (alpha - firstAngle + changeDeg90 > 90) {
-                            var full_bgimgW = ($(".full-bgimg").width() - $(window).width()) / 2;
-                            $(".p6fullView-wrap").css({
-                                'transform': 'translateX(' + full_bgimgW + 'px)'
-                            });
-                        } else if (alpha - firstAngle + changeDeg90 < -90) {
-                            var full_bgimgW = ($(".full-bgimg").width() - $(window).width() * (-1)) / 2;
-                            $(".p6fullView-wrap").css({
-                                'transform': 'translateX(' + full_bgimgW + 'px)'
-                            });
-                        } else {
-                            if (alpha > firstAngle) {
-                                instance = Math.abs(alpha - firstAngle);
-                            } else {
-                                instance = alpha - firstAngle;
-                            }
-                        }
-                    } else if (firstAngle < 90 && firstAngle > 0) {
-                        /*根据alpha当前位置，225度为临界点，判断*/
-                        if (alpha > firstAngle && alpha < 225) {
-                            if (alpha - firstAngle + changeDeg90 > 90) {
-                                var full_bgimgW = ($(".full-bgimg").width() - $(window).width()) / 2;
-                                $(".p6fullView-wrap").css({
-                                    'transform': 'translateX(' + full_bgimgW + 'px)'
-                                });
-                            } else {
-                                instance = Math.abs(alpha - firstAngle);
-                            }
-                        } else if (alpha < firstAngle && alpha > 0) {
-                            if (alpha - firstAngle + changeDeg90 < -90) {
-                                var full_bgimgW = ($(".full-bgimg").width() - $(window).width() * (-1)) / 2;
-                                $(".p6fullView-wrap").css({
-                                    'transform': 'translateX(' + full_bgimgW + 'px)'
-                                });
-                            } else {
-                                instance = Math.abs(alpha - firstAngle) * (-1);
-                            }
-                        } else if (alpha < 360 && alpha > 225) {
-                            if ((alpha - 360 - firstAngle + changeDeg90) < -90) {
-                                var full_bgimgW = ($(".full-bgimg").width() - $(window).width() * (-1)) / 2;
-                                $(".p6fullView-wrap").css({
-                                    'transform': 'translateX(' + full_bgimgW + 'px)'
-                                });
-                            } else {
-                                instance = Math.abs(alpha - 360 - firstAngle) * (-1);
-                            }
-
-                        }
-                    } else if (firstAngle < 360 && firstAngle > 270) {
-                        /*根据alpha当前位置，135度为临界点，判断*/
-                        if (alpha < firstAngle && alpha > 135) {
-                            if (alpha - firstAngle + changeDeg90 < -90) {
-                                var full_bgimgW = ($(".full-bgimg").width() - $(window).width() * (-1)) / 2;
-                                $(".p6fullView-wrap").css({
-                                    'transform': 'translateX(' + full_bgimgW + 'px)'
-                                });
-                            } else {
-                                instance = Math.abs(alpha - firstAngle) * (-1);
-                            }
-                        } else if (alpha > firstAngle && alpha < 360) {
-                            if ((alpha - firstAngle + changeDeg90) > 90) {
-                                var full_bgimgW = ($(".full-bgimg").width() - $(window).width()) / 2;
-                                $(".p6fullView-wrap").css({
-                                    'transform': 'translateX(' + full_bgimgW + 'px)'
-                                });
-                            } else {
-                                instance = Math.abs(alpha - firstAngle);
-                            }
-                        } else if (alpha < 135 && alpha > 0) {
-                            if ((360 - firstAngle + alpha + changeDeg90) > 90) {
-                                var full_bgimgW = ($(".full-bgimg").width() - $(window).width()) / 2;
-                                $(".p6fullView-wrap").css({
-                                    'transform': 'translateX(' + full_bgimgW + 'px)'
-                                });
-                            } else {
-                                instance = Math.abs(360 - firstAngle + alpha);
-                            }
-                        }
-                    }
-
-                    $(".full_bgimgW").html("初始度数：" + firstAngle + "当前度数：" + alpha + "距离中心偏离度数" + changeDeg90 + "偏移距离" + translateZ + "每一度px" + full_bgimgW)
-                    // $(".translateZ").html(translateZ);
-                    // if(instance > 0 && instance < 90){
-
-                    $(".p6fullView-wrap").css({
-                        'transform': 'translateX(' + translateZ + 'px)'
-                    })
-                    // }
-                }
-            }, false);
-        } else {
-            document.querySelector('body').innerHTML = '你的浏览器不支持陀螺仪';
-        }
+            g.innerHTML = Math.round(gamma);
+            var translateZ = parseInt(Math.round(gamma) * 0.5);
+            if (translateZ >= 40) {
+                translateZ = 40
+            }
+            if (translateZ >= -40) {
+                translateZ = -40
+            }
+            $(".translateZ").html(translateZ);
+            let wrap = document.querySelector('.wrap')
+            wrap.style.transform = 'translateX(' + translateZ + 'px)'
+        }, false);
+    } else {
+        document.querySelector('body').innerHTML = '你的浏览器不支持陀螺仪';
     }
 </script>
 
